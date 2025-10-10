@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: bank-wise-authorization
+  profiles:
+    active: dev
+  jackson:
+    default-property-inclusion: non_null
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  springdoc:
+    override-with-generic-response: false

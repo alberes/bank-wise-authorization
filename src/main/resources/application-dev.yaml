@@ -1,0 +1,48 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080
+  datasource:
+    url: jdbc:h2:file:./data/bank-wise
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+logging:
+  file:
+    name: bank-wise-authorization.log
+  level:
+    root: warn
+    #org.springframework.web: debug
+    #org.springframework.security: debug
+    #org.springframework.security.oauth2: debug
+    #org.springframework.boot.autoconfigure: debug
+#Trace, debug, info, warn, error
+
+app:
+  server:
+    #Ambiente docker precisa configurar o nome do servico
+    issuer:
+  token:
+    accessTokenExpiration: 30
+    refreshTokenExpiration: 60
