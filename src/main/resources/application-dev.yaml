@@ -51,7 +51,7 @@ logging:
 #Trace, debug, info, warn, error
 
 app:
-  interestRate: 10
+  interestRate: 1.02
   server:
     #Ambiente docker precisa configurar o nome do servico
     issuer:
