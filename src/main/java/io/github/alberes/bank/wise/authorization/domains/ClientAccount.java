@@ -49,7 +49,7 @@ public class ClientAccount implements Serializable {
     private LocalDateTime lastModifiedDate;
 
     @ElementCollection
-    @CollectionTable(name = "user_account_scope")
+    @CollectionTable(name = "client_account_scope")
     private Set<String> scopes;
 
     @OneToMany(mappedBy = "clientAccount")

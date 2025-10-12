@@ -35,7 +35,7 @@ public interface Constants {
     public static final String OBJECT_NOT_FOUND_ID = "Object not found! Id: ";
     public static final String TYPE = ", Type: ";
     public static final Set<String> SWAGGERS = Set.of("/v2/api-docs/**", "/v3/api-docs/**", "/swagger-resources/**",
-            "/swagger-ui.html", "/swagger-ui/**", "/webjars/**", "/actuator/**");
+            "/swagger-ui.html", "/swagger-ui/**", "/webjars/**", "/actuator/**", "/h2-console", "/h2-console/**");
 
     public static final String ACCESS_CONTROL_EXPOSE_HEADERS = "access-control-expose-headers";
     public static final String LOCATION = "location";
