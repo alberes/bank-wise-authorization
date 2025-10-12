@@ -2,7 +2,6 @@ package io.github.alberes.bank.wise.authorization.services;
 
 import io.github.alberes.bank.wise.authorization.controllers.mappers.ClientAccountBankStatementMapper;
 import io.github.alberes.bank.wise.authorization.controllers.mappers.TransactionAccountBankStatementMapper;
-import io.github.alberes.bank.wise.authorization.controllers.mappers.TransactionMapper;
 import io.github.alberes.bank.wise.authorization.domains.ClientAccount;
 import io.github.alberes.bank.wise.authorization.domains.TransactionAccount;
 import io.github.alberes.bank.wise.authorization.domains.statements.BankStatement;
@@ -30,8 +29,6 @@ public class TransactionAccountService {
     private final TransactionAccountRepository repository;
 
     private final ClientAccountService clientAccountService;
-
-    private final TransactionMapper mapper;
 
     private final TransactionAccountBankStatementMapper transactionAccountBankStatementMapper;
 

@@ -5,8 +5,6 @@ import io.github.alberes.bank.wise.authorization.domains.statements.ClientAccoun
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import java.time.LocalDateTime;
-
 @Mapper(componentModel = "spring")
 public interface ClientAccountBankStatementMapper {
 

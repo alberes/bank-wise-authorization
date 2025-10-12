@@ -9,6 +9,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -68,6 +69,21 @@ public class ControllerExceptionHandler {
 
     }
 
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<StandardErrorDto> authorizationException(AuthorizationException authorizationException,
+                                                                   HttpServletRequest httpServletRequest){
+        StandardErrorDto standardErrorDto = new StandardErrorDto(
+                System.currentTimeMillis(),
+                authorizationException.getStatus(),
+                HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                authorizationException.getMessage(),
+                httpServletRequest.getRequestURI(),
+                List.of());
+        return ResponseEntity
+                .status(standardErrorDto.getStatus()).body(standardErrorDto);
+
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<StandardErrorDto> httpMessageNotReadableException(HttpMessageNotReadableException httpMessageNotReadableException,
                                                                             HttpServletRequest httpServletRequest){
@@ -81,6 +97,20 @@ public class ControllerExceptionHandler {
 
         return ResponseEntity
                 .status(standardErrorDto.getStatus()).body(standardErrorDto);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<StandardErrorDto> authorizationException(BadCredentialsException badCredentialsException,
+                                                                   HttpServletRequest httpServletRequest){
+        StandardErrorDto standardErrorDto = new StandardErrorDto(
+                System.currentTimeMillis(),
+                HttpStatus.UNAUTHORIZED.value(),
+                HttpStatus.UNAUTHORIZED.getReasonPhrase(), badCredentialsException.getMessage(),
+                httpServletRequest.getRequestURI(),
+                List.of());
+        return ResponseEntity
+                .status(standardErrorDto.getStatus()).body(standardErrorDto);
+
     }
 
 }

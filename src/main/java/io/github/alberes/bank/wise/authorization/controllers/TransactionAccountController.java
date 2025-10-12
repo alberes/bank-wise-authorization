@@ -4,6 +4,7 @@ import io.github.alberes.bank.wise.authorization.constants.Constants;
 import io.github.alberes.bank.wise.authorization.controllers.dto.TransactionAccountDto;
 import io.github.alberes.bank.wise.authorization.controllers.dto.TransactionDto;
 import io.github.alberes.bank.wise.authorization.controllers.dto.TransactionReportDto;
+import io.github.alberes.bank.wise.authorization.controllers.exceptions.AuthorizationException;
 import io.github.alberes.bank.wise.authorization.controllers.exceptions.dto.StandardErrorDto;
 import io.github.alberes.bank.wise.authorization.controllers.mappers.TransactionAccountBankStatementMapper;
 import io.github.alberes.bank.wise.authorization.domains.ClientAccount;
@@ -19,13 +20,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/accounts/{id}/transactions")
 @RequiredArgsConstructor
@@ -51,7 +57,16 @@ public class TransactionAccountController implements GenericController{
             @ApiResponse(responseCode = "409", description = "There is a Client with clientId.",
                     content = @Content(schema = @Schema(implementation = StandardErrorDto.class)))
     })
-    public ResponseEntity<Void> save(@PathVariable String id, @RequestBody @Valid TransactionAccountDto dto){
+    public ResponseEntity<Void> save(@AuthenticationPrincipal Jwt jwt,
+                                     @PathVariable String id, @RequestBody @Valid TransactionAccountDto dto){
+        String clientAccountId = (String)jwt.getClaims().get("id");
+        //Only Client Account must access data herself.
+        if(!id.equals(clientAccountId)){
+            AuthorizationException authorizationException = new AuthorizationException(HttpStatus.UNAUTHORIZED.value(),
+                    HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            log.warn("Invalid access ClientAccountId: {} - id: {}", clientAccountId, id);
+            throw authorizationException;
+        }
         UUID uuid = UUID.fromString(id);
         ClientAccount clientAccount = new ClientAccount();
         clientAccount.setId(uuid);
@@ -78,7 +93,7 @@ public class TransactionAccountController implements GenericController{
             @ApiResponse(responseCode = "404", description = "Could not find transactions in database.",
                     content = @Content(schema = @Schema(implementation = StandardErrorDto.class)))
     })
-    public ResponseEntity<TransactionReportDto> find(@PathVariable String id){
+    public ResponseEntity<TransactionReportDto> find(@AuthenticationPrincipal Jwt jwt, @PathVariable String id){
         BankStatement bankStatement = this.bankStatementService.find(id);
         if(bankStatement == null){
             return ResponseEntity.notFound().build();
