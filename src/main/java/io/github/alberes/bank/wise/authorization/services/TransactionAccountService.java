@@ -1,11 +1,16 @@
 package io.github.alberes.bank.wise.authorization.services;
 
-import io.github.alberes.bank.wise.authorization.controllers.dto.TransactionDto;
+import io.github.alberes.bank.wise.authorization.controllers.mappers.ClientAccountBankStatementMapper;
+import io.github.alberes.bank.wise.authorization.controllers.mappers.TransactionAccountBankStatementMapper;
 import io.github.alberes.bank.wise.authorization.controllers.mappers.TransactionMapper;
 import io.github.alberes.bank.wise.authorization.domains.ClientAccount;
 import io.github.alberes.bank.wise.authorization.domains.TransactionAccount;
+import io.github.alberes.bank.wise.authorization.domains.statements.BankStatement;
+import io.github.alberes.bank.wise.authorization.domains.statements.ClientAccountBankStatement;
+import io.github.alberes.bank.wise.authorization.domains.statements.TransactionAccountBankStatement;
 import io.github.alberes.bank.wise.authorization.enums.TransactionType;
 import io.github.alberes.bank.wise.authorization.repositories.TransactionAccountRepository;
+import io.github.alberes.bank.wise.authorization.services.statements.BankStatementService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +33,14 @@ public class TransactionAccountService {
 
     private final TransactionMapper mapper;
 
+    private final TransactionAccountBankStatementMapper transactionAccountBankStatementMapper;
+
+    private final ClientAccountBankStatementMapper clientAccountBankStatementMapper;
+
+    private final BankStatementService bankStatementService;
+
+    private final InterestRateService interestRateService;
+
     @Transactional
     @Modifying
     public TransactionAccount save(TransactionAccount transactionAccount){
@@ -33,23 +48,53 @@ public class TransactionAccountService {
         transactionAccount.setClientAccount(clientAccount);
         transactionAccount = this.repository.save(transactionAccount);
 
-        List<TransactionAccount> transactions = this.repository
-                .findByClientAccountIdOrderByCreatedDateAsc(transactionAccount.getClientAccount().getId());
-        BigDecimal sum = transactions
-                .stream()
-                .map(TransactionAccount::getTransactionValue)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        //MongoDB
+        BankStatement bankStatement = this.bankStatementService.find(clientAccount.getId().toString());
 
-        List<TransactionDto> transactionsReport = transactions
-                .stream()
-                .map(this.mapper::toDto)
-                .toList();
+        //First transaction
+        if(bankStatement == null){
+            bankStatement = new BankStatement();
+            bankStatement.setId(clientAccount.getId().toString());
+            ClientAccountBankStatement clientAccountBankStatement =
+                    clientAccountBankStatementMapper.toClientAccountBankStatement(clientAccount);
+            bankStatement.setBalance(BigDecimal.ZERO);
+            bankStatement.setClientAccountBankStatement(clientAccountBankStatement);
+            bankStatement.getClientAccountBankStatement().setTransactions(new ArrayList<TransactionAccountBankStatement>());
+        }
+
+        //Prepare new transaction in MongoDB
+        //Need to sse the bank balance to calculate interest and create new transaction.
+        TransactionAccountBankStatement transactionAccountBankStatement = null;
+        if(transactionAccount.getTransactionType().equals(TransactionType.DEPOSIT.getId())) {
+            TransactionAccount transactionAccountInterest = this.interestRateService.createInterest(bankStatement, clientAccount);
+            if (transactionAccountInterest != null) {
+                transactionAccountInterest = this.repository.save(transactionAccountInterest);
+                transactionAccountBankStatement =
+                        transactionAccountBankStatementMapper.toTransactionAccountBankStatement(transactionAccountInterest);
+                bankStatement.getClientAccountBankStatement()
+                        .getTransactions().add(transactionAccountBankStatement);
+            }
+        }
+
+        //Add current transaction
+        transactionAccountBankStatement =
+                transactionAccountBankStatementMapper.toTransactionAccountBankStatement(transactionAccount);
+        bankStatement.getClientAccountBankStatement()
+                .getTransactions().add(transactionAccountBankStatement);
+
+        //Create or update in MongoDB
+        BigDecimal deposits = bankStatement.depositBalance();
+        BigDecimal payments = bankStatement.paymentBalance();
+        BigDecimal bankBalance = deposits.subtract(payments);
+        log.info("AccoutId: {} - deposit: {} - payment: {} - balance: {}", bankStatement.getId(), deposits, payments, bankBalance);
+        bankStatement.setBalance(bankBalance);
+        bankStatement = this.bankStatementService.save(bankStatement);
 
         return transactionAccount;
     }
 
-    @Transactional
-    public List<TransactionAccount> transactions(){
+    @Transactional(readOnly = true)
+    public List<TransactionAccount> transactions(UUID id){
         return null;
     }
 

@@ -23,14 +23,16 @@ public class Application implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		String clientId = "admin-client-id";
 		Client client = this.clientRepository.findByClientId(clientId);
-		if(client == null){
-			client = new Client();
-			client.setClientId(clientId);
-			client.setClientSecret("$2a$12$40ulvRdrXkyEszgVHD/kEOdZTEzJpnrM7JN0WqGzoFkNJ3eSLRrm.");
-			client.setRedirectURI("http://localhost:8080/login/oauth2/code/bank-wise-client-oidc");
-			client.setScope("ADMIN");
-			this.clientRepository.save(client);
+		if(client != null){
+			this.clientRepository.deleteByClientId(clientId);
+			client = null;
 		}
+		client = new Client();
+		client.setClientId(clientId);
+		client.setClientSecret("$2a$12$40ulvRdrXkyEszgVHD/kEOdZTEzJpnrM7JN0WqGzoFkNJ3eSLRrm.");
+		client.setRedirectURI("http://localhost:8080/login/oauth2/code/bank-wise-client-oidc");
+		client.setScope("ADMIN");
+		this.clientRepository.save(client);
 
 	}
 }

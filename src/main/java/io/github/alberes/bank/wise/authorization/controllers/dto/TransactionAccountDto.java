@@ -1,6 +1,7 @@
 package io.github.alberes.bank.wise.authorization.controllers.dto;
 
 import io.github.alberes.bank.wise.authorization.controllers.dto.enums.TransactionTypeDto;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -10,5 +11,6 @@ public record TransactionAccountDto(
         @NotNull(message = "Obligatory field")
         TransactionTypeDto type,
         @Positive(message = "The transactionValue must be greater than 0.")
+        @Digits(integer = 10, fraction = 2, message = "The transactionValue must have maximum of 2 decimal places")
         BigDecimal transactionValue) {
 }

@@ -45,7 +45,7 @@ public class ClientAccountService {
         return clientAccount;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ClientAccount find(UUID id){
         Optional<ClientAccount> optional = this.repository.findById(id);
         log.info("Client account {}found. clientAccountId: {}", (optional.isPresent()? "" : "not "), id);
@@ -62,6 +62,8 @@ public class ClientAccountService {
         log.info("Updated clientAccountId {}", clientAccountDB.getId());
     }
 
+    @Transactional
+    @Modifying
     public void delete(UUID id){
         this.find(id);
         this.repository.deleteById(id);

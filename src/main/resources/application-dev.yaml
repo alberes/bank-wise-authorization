@@ -20,6 +20,17 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  data:
+    mongodb:
+      uri: mongodb://bank-wise-admin:bank-wise-pass@localhost:27017/bank-wise?authSource=admin
+  #data:
+  #  mongodb:
+  #    host: localhost
+  #    port: 27017
+  #    username: bank-wise-admin
+  #    password: bank-wise-pass
+  #    database: bank-wise
+  #    authentication-database: admin
 
 management:
   server:
@@ -40,9 +51,10 @@ logging:
 #Trace, debug, info, warn, error
 
 app:
+  interestRate: 10
   server:
     #Ambiente docker precisa configurar o nome do servico
     issuer:
   token:
-    accessTokenExpiration: 30
-    refreshTokenExpiration: 60
+    accessTokenExpiration: 300
+    refreshTokenExpiration: 600

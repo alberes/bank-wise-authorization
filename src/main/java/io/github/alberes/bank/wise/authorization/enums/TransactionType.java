@@ -10,7 +10,8 @@ public enum TransactionType {
 
     DEPOSIT(1, "DEPOSIT"),
     WITHDRAW(2, "WITHDRAW"),
-    PAYMENT(3, "PAYMENT");
+    PAYMENT(3, "PAYMENT"),
+    INTEREST(4, "INTEREST");
 
     private Integer id;
 

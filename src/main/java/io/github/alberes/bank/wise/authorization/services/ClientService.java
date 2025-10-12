@@ -42,7 +42,7 @@ public class ClientService {
         return client;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Client find(String clientId){
         Client client = this.repository.findByClientId(clientId);
 
@@ -69,15 +69,6 @@ public class ClientService {
         this.find(clientId);
         this.repository.deleteByClientId(clientId);
         log.info("User deleted clientId: {}", clientId);
-    }
-
-    @Transactional
-    public Page<Client> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
-        Page<Client> clients = null;
-        clients = this.repository.findAll(
-                PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy));
-        log.info("Users(ADMIN) - total page: {}, total elements: {}", clients.getTotalPages(), clients.getTotalElements());
-        return clients;
     }
 
 }
