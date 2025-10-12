@@ -93,15 +93,15 @@ public class SecurityAuthorizationServerConfiguration {
     @Order(2)
     public SecurityFilterChain securityAuthorizationResource(HttpSecurity httpSecurity)
             throws Exception {
-        return httpSecurity
+        httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) ->
                         authorize.anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-                .formLogin(Customizer.withDefaults())
-                .build();
-
+                .formLogin(Customizer.withDefaults());
+        
+        return httpSecurity.build();
     }
 
     //An instance of com.nimbusds.jose.jwk.source.JWKSource for signing access tokens.
