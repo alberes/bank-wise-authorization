@@ -75,6 +75,7 @@ public class SecurityAuthorizationServerConfiguration {
         OAuth2AuthorizationServerConfigurer oAuth2AuthorizationServerConfigurer
                 = OAuth2AuthorizationServerConfigurer.authorizationServer();
         httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
                 .securityMatcher(oAuth2AuthorizationServerConfigurer.getEndpointsMatcher())
                 .with(oAuth2AuthorizationServerConfigurer, (authorizationServer) ->
                         authorizationServer.oidc(Customizer.withDefaults()))
@@ -90,31 +91,18 @@ public class SecurityAuthorizationServerConfiguration {
 
     @Bean
     @Order(2)
-    public SecurityFilterChain securityAuthorizationResource(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityAuthorizationResource(HttpSecurity httpSecurity)
+            throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> {
-                    request.requestMatchers(Constants.API_V1_LOGIN).permitAll();
-                    request.anyRequest().authenticated();
-                })
-                .sessionManagement(
-                        session ->
-                                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-                .build();
-    }
-
-    /*@Bean
-    @Order(3)
-    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
-            throws Exception {
-        http.authorizeHttpRequests((authorize) ->
+                .authorizeHttpRequests((authorize) ->
                         authorize.anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults());
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+                .formLogin(Customizer.withDefaults())
+                .build();
 
-        return http.build();
-    }*/
+    }
 
     //An instance of com.nimbusds.jose.jwk.source.JWKSource for signing access tokens.
     @Bean

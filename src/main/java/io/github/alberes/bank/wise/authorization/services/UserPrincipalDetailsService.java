@@ -29,6 +29,7 @@ public class UserPrincipalDetailsService implements UserDetailsService {
             log.error(usernameNotFoundException.getMessage(), usernameNotFoundException);
             throw usernameNotFoundException;
         }
+        clientAccount.getScopes().size();
         return new UserPrincipal(clientAccount);
     }
 }
