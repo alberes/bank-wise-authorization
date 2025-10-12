@@ -31,7 +31,5 @@ public class Application implements CommandLineRunner {
 			client.setScope("ADMIN");
 			this.clientRepository.save(client);
 		}
-
-
 	}
 }

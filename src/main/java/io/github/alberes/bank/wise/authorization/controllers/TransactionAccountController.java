@@ -94,6 +94,14 @@ public class TransactionAccountController implements GenericController{
                     content = @Content(schema = @Schema(implementation = StandardErrorDto.class)))
     })
     public ResponseEntity<TransactionReportDto> find(@AuthenticationPrincipal Jwt jwt, @PathVariable String id){
+        String clientAccountId = (String)jwt.getClaims().get("id");
+        //Only Client Account must access data herself.
+        if(!id.equals(clientAccountId)){
+            AuthorizationException authorizationException = new AuthorizationException(HttpStatus.UNAUTHORIZED.value(),
+                    HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            log.warn("Invalid access ClientAccountId: {} - id: {}", clientAccountId, id);
+            throw authorizationException;
+        }
         BankStatement bankStatement = this.bankStatementService.find(id);
         if(bankStatement == null){
             return ResponseEntity.notFound().build();
