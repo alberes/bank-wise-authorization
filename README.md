@@ -23,8 +23,9 @@ O sistema usa o padrão arquitetural **CQRS** (Command Query Responsibility Segr
       * Sistema criará uma nova transação de 1.02 com saldo negativo R$ 100,00
       * Atualiza o saldo R$ 98,00
     * Caso o saldo ainda continue negativo o sistema irá calcular novos juros até o saldo ficar positivo.
-|Ordem|Tipo|Valor|Saldo
-|--|--|--|
+
+|  Ordem| Tipo | Valor| Saldo|
+|--|--|--|--|
 |1|Depósito|200.00|200.00|
 |2|Pagamento|300.00|-100|
 |3|Deposito|200.00|98.98|
