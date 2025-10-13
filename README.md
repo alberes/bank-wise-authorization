@@ -24,12 +24,26 @@ O sistema usa o padrão arquitetural **CQRS** (Command Query Responsibility Segr
       * Atualiza o saldo R$ 98,00
     * Caso o saldo ainda continue negativo o sistema irá calcular novos juros até o saldo ficar positivo.
 
+Exemplo 1:
 |  Ordem| Tipo | Valor| Saldo|
 |--|--|--|--|
 |1|Depósito|200.00|200.00|
 |2|Pagamento|300.00|-100.00|
 |3|Deposito|200.00|100.00|
 |4|Juros|1.02|98.98|
+
+Exemplo 2:
+|  Ordem| Tipo | Valor| Saldo|
+|--|--|--|--|
+|1|Depósito|100.00|100.00|
+|2|Pagamento|200.00|-100.00|
+|1|Depósito|10.00|-90.00|
+|4|Juros|1.02|-91.02|
+|1|Depósito|50.00|-41.02|
+|4|Juros|0.93|-41.95|
+|1|Depósito|60.00|17.62|
+|1|Depósito|0.43|17.62|
+
 
 ### Tecnologias Utilizadas
 * Linguagem:
