@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Service
 @Slf4j
@@ -38,7 +39,7 @@ public class InterestRateService {
             transactionAccountInterest = new TransactionAccount();
             transactionAccountInterest.setClientAccount(clientAccount);
             transactionAccountInterest.setTransactionType(TransactionType.INTEREST.getId());
-            transactionAccountInterest.setTransactionValue(interest);
+            transactionAccountInterest.setTransactionValue(interest.setScale(2, RoundingMode.HALF_UP));
             bankBalance = bankBalance.subtract(payments) ;
         }
         return transactionAccountInterest;

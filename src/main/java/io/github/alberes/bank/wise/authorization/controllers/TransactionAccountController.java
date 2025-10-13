@@ -28,6 +28,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.UUID;
 
@@ -74,7 +76,8 @@ public class TransactionAccountController implements GenericController{
         transactionAccount.setClientAccount(clientAccount);
         transactionAccount
                 .setTransactionType(this.service.getTransactionType(dto.type().toString()).getId());
-        transactionAccount.setTransactionValue(dto.transactionValue());
+        transactionAccount.setTransactionValue(dto.transactionValue()
+                .setScale(2, RoundingMode.HALF_UP));
         transactionAccount = this.service.save(transactionAccount);
 
         return ResponseEntity

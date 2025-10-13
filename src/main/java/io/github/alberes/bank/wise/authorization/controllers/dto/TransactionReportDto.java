@@ -6,6 +6,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public record TransactionReportDto(
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "0.00")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#,##0.00")
         BigDecimal saldoTotal, List<TransactionDto> historico) {
 }

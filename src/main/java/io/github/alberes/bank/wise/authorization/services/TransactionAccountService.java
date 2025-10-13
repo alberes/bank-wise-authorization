@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -84,7 +85,7 @@ public class TransactionAccountService {
         BigDecimal payments = bankStatement.paymentBalance();
         BigDecimal bankBalance = deposits.subtract(payments);
         log.info("AccoutId: {} - deposit: {} - payment: {} - balance: {}", bankStatement.getId(), deposits, payments, bankBalance);
-        bankStatement.setBalance(bankBalance);
+        bankStatement.setBalance(bankBalance.setScale(2, RoundingMode.HALF_UP));
         bankStatement = this.bankStatementService.save(bankStatement);
 
         return transactionAccount;
