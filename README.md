@@ -60,6 +60,9 @@ O sistema usa o padrão arquitetural **CQRS** (Command Query Responsibility Segr
 
 ### Como Executar
 1. Clone o repositório: git clone [bank-wise-authorization](https://github.com/alberes/bank-wise-authorization)
+```
+git clone https://github.com/alberes/bank-wise-authorization.git
+```
 2. O Banco de dados utilizado foi o H2 que sobe junto com aplicação:
 - As configurações econtra-se no arquivo application-dev.yaml
 - Banco de dados: bank-wise
@@ -72,13 +75,15 @@ O sistema usa o padrão arquitetural **CQRS** (Command Query Responsibility Segr
 3. Banco de dados não relacional MongoDB:
 - As configurações econtra-se no arquivo application-dev.yaml e deverá ser alterado caso tenha necessidade.
 - No projeto foi utilizado uma imagem docker para facilitar o desenvolvimento e caso tenha instalado o MongoDB na máquina mude apenas as credenciais.  
-  ``` docker run -d --name mongodb -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=bank-wise-admin -e MONGO_INITDB_ROOT_PASSWORD=bank-wise-pass mongo:latest ```
+```
+docker run -d --name mongodb -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=bank-wise-admin -e MONGO_INITDB_ROOT_PASSWORD=bank-wise-pass mongo:latest
+```
 4. [Swagger](http://localhost:8080/swagger-ui/index.html)
 5. Executar o projeto
 - Abrir o terminal no diretório raiz do projeto [SUB_DIRETORIOS]/bank-wise-authorization e executar o comando abaixo para gerar o pacote.
-  ``` 
-  mvn -DskipTests=true clean package 
-  ``` 
+``` 
+mvn -DskipTests=true clean package 
+``` 
 - No termial entrar no diretório [SUB_DIRETORIOS]/bank-wise-authorization/target
  ``` 
 java -jar bank-wise-authorization-0.0.1-SNAPSHOT.jar

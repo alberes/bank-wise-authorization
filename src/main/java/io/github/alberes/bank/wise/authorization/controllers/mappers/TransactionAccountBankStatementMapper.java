@@ -16,8 +16,8 @@ public interface TransactionAccountBankStatementMapper {
     public TransactionAccountBankStatement toTransactionAccountBankStatement(TransactionAccount transactionAccount);
 
     @Mapping(source = "transactionType", target = "type")
-    @Mapping(source = "transactionValue", target = "transactionValue")
-    @Mapping(source = "createdDate", target = "createdDate")
+    @Mapping(source = "transactionValue", target = "valor")
+    @Mapping(source = "createdDate", target = "data")
     public TransactionDto toTransactionDto(TransactionAccountBankStatement transactionAccountBankStatement);
 
     default String mapTransactionTypeToTransactionType(Integer id){
