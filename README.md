@@ -86,7 +86,9 @@ java -jar bank-wise-authorization-0.0.1-SNAPSHOT.jar
 
 A aplicação subirá na porta 8080
 
-A aplicação tem um cliente Admin para poder cadastrar os outros usuários.
+A aplicação tem um client Admin para poder cadastrar os outros usuários.
+
+[Collection Postman](bank-wise-authorization.postman_collection.json)
 
 API para autenticação client_credencial para obter um token e cadastrar outros clients/Account
 ```

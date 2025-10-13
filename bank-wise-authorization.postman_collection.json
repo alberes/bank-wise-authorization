@@ -1,0 +1,1201 @@
+{
+	"info": {
+		"_postman_id": "fac538b2-4fbb-4d1a-aa0c-da8355d1b71f",
+		"name": "bank-wise-authorization",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "891104",
+		"_collection_link": "https://solar-station-361672.postman.co/workspace/cursos~ed905280-362f-4384-9722-3985fe33206e/collection/891104-fac538b2-4fbb-4d1a-aa0c-da8355d1b71f?action=share&source=collection_link&creator=891104"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "CLIENT_CREDENTIALS-ADMIN",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessTokenUrl",
+									"value": "http://localhost:8080/oauth2/token",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "bank-wise",
+									"type": "string"
+								},
+								{
+									"key": "scope",
+									"value": "ADMIN",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "admin-client-id",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "admin-client-secret",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "http://localhost:8081",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CLIENT_CREDENTIALS_MANUAL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const body = JSON.parse(responseBody);\r",
+									"\r",
+									"pm.globals.set(\"access_token\", body.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW4tY2xpZW50LWlkOmFkbWluLWNsaWVudC1zZWNyZXQ=",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "ADMIN",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/oauth2/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"oauth2",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AUTHORIZATION_CODE",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenName",
+									"value": "Bank-Wise",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "postman-secret",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "postman-client",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost:9090/login/oauth2/code/bank-wise-client-oidc",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "http://localhost:8080/oauth2/token",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "http://localhost:8080/oauth2/authorize",
+									"type": "string"
+								},
+								{
+									"key": "scope",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Client",
+			"item": [
+				{
+					"name": "CREATE_CLIENT_201",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"clientId\": \"postman-client\",\r\n    \"clientSecret\": \"postman-secret\",\r\n    \"redirectURI\": \"http://localhost:9090/login/oauth2/code/bank-wise-client-oidc\",\r\n    \"scope\": \"USER\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/clients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"clients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE_CLIENT_204",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiIwYWE1ZDM4NS1hZGQ3LTQzMjYtOTg5ZC0wMDU0OWI2ZjY5ODAiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbi1jbGllbnQtaWQiLCJhdWQiOiJhZG1pbi1jbGllbnQtaWQiLCJuYmYiOjE3NjAxMTYxODQsInNjb3BlIjpbIkFETUlOIl0sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImlkIjoiMzhiYzdlYzctMDY5My00MjFmLThjMzMtOWYwOThhMzA1YmY2IiwiZXhwIjoxNzYwMTE3OTg0LCJpYXQiOjE3NjAxMTYxODQsImp0aSI6ImFjNDg3Y2QwLTM3ZmUtNDVlOC05ZTY0LWQyNGFkYWQ5MDg4YyJ9.eLxSrv-bU0OjBB-If5-t8ofXWXVXscb5VEn787Svz6QmBnaZzs9d-ejAlwfOwYa-KYGE47VaOPP73OwS3skqwnMXAgt-RYOOPFK8CLkkrBQTj124R7RWM6i-MMWEpI1ZBjh195RI9ZAUugbkpT4bJ90cG3jitKMp9pnD8pUnTYNFZD805lg-5yOsYIzFKmWi8KbI-yOPmFaTJXkhHF34nRWdX4beJkxM6v3gB-mo7OEm4YvhNqQHbKfBEjAsP7ebtiuiL-itTANyLc-HgEGerUzOF5st0K7A_dy3IcNCeiK5c4XFq6UM066NCDuiCnpIIZ4atkr1HCl3lVjRBtepfA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"redirectURI\": \"http://localhost:8080/login/oauth2/code/client-server-oidc\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/clients/:CLIENT_ID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"clients",
+								":CLIENT_ID"
+							],
+							"variable": [
+								{
+									"key": "CLIENT_ID",
+									"value": "admin-client-id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FIND_CLIENT_200",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/clients/:CLIENT_ID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"clients",
+								":CLIENT_ID"
+							],
+							"variable": [
+								{
+									"key": "CLIENT_ID",
+									"value": "admin-client-id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE_CLIENT_204",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJjNThiNDI0NC0yZDI4LTRkNWUtODE1Ny04ZmEzNzUxNDc4OGUiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbi1jbGllbnQtaWQiLCJhdWQiOiJhZG1pbi1jbGllbnQtaWQiLCJuYmYiOjE3NjAxMTY1OTMsInNjb3BlIjpbIkFETUlOIl0sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImlkIjoiMzhiYzdlYzctMDY5My00MjFmLThjMzMtOWYwOThhMzA1YmY2IiwiZXhwIjoxNzYwMTE4MzkzLCJpYXQiOjE3NjAxMTY1OTMsImp0aSI6ImQ0YTQ0ODBiLWFkOWMtNDUzOS05OTc1LTdiMDllODRmZDI3MSJ9.oexTLpKR7xgqfr9eCLfcaXO8VB587k-DpPXDIMjnPrmhzNSv_B30w-dFM-JWdBvmZGinKg7ZS8-cQXUn9lfd4RZAgU5ixAgXuQwAejbCXrFeHzw2I0YhcxeznGKKgHi0BaHBKhrkXSs0WNa0uhNCejZxm0lN0fcpZv8P_DqXqpHv3cyC3STTd3UoX7W-cI-El2wtWJAXno13VzfR3aHAnHNgkKZCCfQs8W_xZskKtzNRqZjF6cH4IGjXQ6-OqIId2f2fE0te9XzkAid9EQ4xJ5BUi8YyCkVmgQ23JklgfWFVbYDC3ZN-01fDW5TxIxYxShwlskgSOJSA-jusA7t5HA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/clients/:CLIENT_ID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"clients",
+								":CLIENT_ID"
+							],
+							"variable": [
+								{
+									"key": "CLIENT_ID",
+									"value": "admin-client-id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE_CLIENT_postman1_201",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"clientId\": \"postman2-client\",\r\n    \"clientSecret\": \"postman2-secret\",\r\n    \"redirectURI\": \"http://127.0.0.1:9090/login/oauth2/code/bank-wise-client-oidc\",\r\n    \"scope\": \"USER\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/clients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"clients"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "CREATE_ACCOUNT_201",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Posterman User\",\r\n    \"legalEntityNumber\": \"59964669020\",\r\n    \"login\": \"postman@postman.com\",\r\n    \"password\": \"postman123\",\r\n    \"scopes\": [\r\n    \"write\",\r\n    \"read\",\r\n    \"update\",\r\n    \"delete\"\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/accounts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"accounts"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "CREATE_USER__EMAIL_409",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Posteman User\",\r\n    \"email\": \"postman@postman.com\",\r\n    \"password\": \"postman123456\",\r\n    \"role\": \"USER\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/v1/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "CREATE_USER_NAME_400",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"User Test\",\r\n    \"email\": \"user@user.com\",\r\n    \"password\": \"user123456\",\r\n    \"role\": \"USER\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/v1/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "CREATE_USER_EMAIL_400",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"User Test Data\",\r\n    \"email\": \"useruser.com\",\r\n    \"password\": \"user123456\",\r\n    \"role\": \"USER\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/v1/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "CREATE_USER_PASSWORD_400",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"User Test Data\",\r\n    \"email\": \"user@user.com\",\r\n    \"password\": \"user123\",\r\n    \"role\": \"USER\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/v1/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "CREATE_USER_ROLE_400",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"User Test Data\",\r\n    \"email\": \"user@user.com\",\r\n    \"password\": \"user123456\",\r\n    \"role\": \"US\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/v1/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "CREATE_USER_EMAIL_OBLIGATORY",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"User Test Data\",\r\n    \"password\": \"user123456\",\r\n    \"role\": \"USER\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/v1/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "CREATE_USER_NAME_OBLIGATORY_400",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"user@user.com\",\r\n    \"password\": \"user123456\",\r\n    \"role\": \"USER\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/v1/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "CREATE_USER_PASSWORD_OBRIGATORY_400",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"User Test Data\",\r\n    \"email\": \"user@user.com\",\r\n    \"role\": \"USER\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/v1/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "CREATE_USER_ROLE_OBLIGATORY_400",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"User Test Data\",\r\n    \"email\": \"user@user.com\",\r\n    \"password\": \"user123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/v1/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "CREATE_USER_ROLE_400",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"User Test Data\",\r\n    \"email\": \"user@user.com\",\r\n    \"password\": \"user123456\",\r\n    \"role\": \"US\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/v1/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "FIND_ACCOUNT_200",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/accounts/:ID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								":ID"
+							],
+							"variable": [
+								{
+									"key": "ID",
+									"value": "35614524-b560-4c5f-be80-0a2af8bc0c13",
+									"description": "Colocar um id que exista no banco de dados\n"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "FIND_USER_404",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/api/v1/users/:ID",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										":ID"
+									],
+									"variable": [
+										{
+											"key": "ID",
+											"value": "4c4483aa-e2ea-4ec4-84c4-ff5c6e06c021",
+											"description": "Colocar um id que não exista no banco de dados"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "UPDATE_ACCOUNT_204",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiI4YTEzYWFlMy1mMGFlLTQ2NWYtYWFiYy0zOWRmOTc5Y2VjYjgiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbi1jbGllbnQtaWQiLCJhdWQiOiJhZG1pbi1jbGllbnQtaWQiLCJuYmYiOjE3NjAxMjIwMDQsInNjb3BlIjpbIkFETUlOIl0sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImlkIjoiMWQ3MWE3NjItYzE0Mi00Y2MxLThhZjgtZDc0YTk1MDUzNjE3IiwiZXhwIjoxNzYwMTIzODA0LCJpYXQiOjE3NjAxMjIwMDQsImp0aSI6IjM2N2RmYTI1LTUwMTAtNDU1NS04NzE2LTNkMmQxNzQxOWQxMyJ9.qBDRSl2DLO5Il3XNTuI53Yzh2wSstm1RhL6CMyhW4Z7CJ3vGeXTuYhfoIxMlauKYM3Ows3FaI8xGMAF8-niPURCRWsz7O1b1FajvWMcxkbD1t4mbJX138CoM5Q_SKSyTWDiQ3CSBrVBJsQNevL0ZHkCqTeBea2VIWcACwMInIeus9dbnf10uBQQkLzQM8d65gyIINbL8LsIR4uE3iRotAdrGh4je7v3XRIHepTmstaHE-aQMcbEMxonQG_hy6pb0PZuthUkHQ-6wCv2OQRgCsHez9EbFDCiP88MaS8Z44bnjLdMDvlqjiabNKu-5sZZyT1UZPmUuBGe0xrClApCW2Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Posterman4 User updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/accounts/:ID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								":ID"
+							],
+							"variable": [
+								{
+									"key": "ID",
+									"value": "18c7db97-2b8d-4539-ae37-0998e246c9a4",
+									"description": "Colocar um id que exista no banco de dados"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "UPDATE_USER_404",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"user 1 register updated\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/v1/users/:ID",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										":ID"
+									],
+									"variable": [
+										{
+											"key": "ID",
+											"value": "4c4483aa-e2ea-4ec4-84c4-ff5c6e06c021",
+											"description": "Colocar um id que não exista no banco de dados"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "UPDATE_USER_NAME_400",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name1\": \"user 1 register updated\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/v1/users/:ID",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										":ID"
+									],
+									"variable": [
+										{
+											"key": "ID",
+											"value": "4c4483aa-e2ea-4ec4-84c4-ff5c6e06c020",
+											"description": "Colocar um id que exista no banco de dados"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "DELETE_ACCOUNT_204",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiI4YTEzYWFlMy1mMGFlLTQ2NWYtYWFiYy0zOWRmOTc5Y2VjYjgiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbi1jbGllbnQtaWQiLCJhdWQiOiJhZG1pbi1jbGllbnQtaWQiLCJuYmYiOjE3NjAxMjIwMDQsInNjb3BlIjpbIkFETUlOIl0sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImlkIjoiMWQ3MWE3NjItYzE0Mi00Y2MxLThhZjgtZDc0YTk1MDUzNjE3IiwiZXhwIjoxNzYwMTIzODA0LCJpYXQiOjE3NjAxMjIwMDQsImp0aSI6IjM2N2RmYTI1LTUwMTAtNDU1NS04NzE2LTNkMmQxNzQxOWQxMyJ9.qBDRSl2DLO5Il3XNTuI53Yzh2wSstm1RhL6CMyhW4Z7CJ3vGeXTuYhfoIxMlauKYM3Ows3FaI8xGMAF8-niPURCRWsz7O1b1FajvWMcxkbD1t4mbJX138CoM5Q_SKSyTWDiQ3CSBrVBJsQNevL0ZHkCqTeBea2VIWcACwMInIeus9dbnf10uBQQkLzQM8d65gyIINbL8LsIR4uE3iRotAdrGh4je7v3XRIHepTmstaHE-aQMcbEMxonQG_hy6pb0PZuthUkHQ-6wCv2OQRgCsHez9EbFDCiP88MaS8Z44bnjLdMDvlqjiabNKu-5sZZyT1UZPmUuBGe0xrClApCW2Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/accounts/:ID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								":ID"
+							],
+							"variable": [
+								{
+									"key": "ID",
+									"value": "18c7db97-2b8d-4539-ae37-0998e246c9a4",
+									"description": "Colocar um id que exista no banco de dados"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "DELETE_USER_404",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/api/v1/users/:ID",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										":ID"
+									],
+									"variable": [
+										{
+											"key": "ID",
+											"value": "4c4483aa-e2ea-4ec4-84c4-ff5c6e06c020",
+											"description": "Colocar um id que não exista no banco de dados"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "CREATE_DEPOIST_TRANSACTION_201",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJiMjg3Mjg1ZC1lMzM1LTRjODUtOGZjMC05MWIxM2ZlNzgzNDEiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJwb3N0bWFuQHBvc3RtYW4uY29tIiwiYXVkIjoicG9zdG1hbi1jbGllbnQiLCJuYmYiOjE3NjAyOTk5NzksInNjb3BlIjpbIlJFQUQiLCJERUxFVEUiLCJVUERBVEUiLCJXUklURSJdLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJuYW1lIjoiUG9zdGVybWFuIFVzZXIiLCJyZWdpc3RyYXRpb25EYXRlIjoiMTItMTAtMjAyNSAxNzowMDo0MCIsImlkIjoiNjFhNWYzZjItOWI3ZC00YmVhLWJmMTQtOTQ2NDQ4NjhlNGM0IiwiZXhwIjoxNzYwMzE3OTc5LCJpYXQiOjE3NjAyOTk5NzksImp0aSI6IjRjZTgwYzNjLTg2OTItNGVmYS1iM2Y1LTdjZmVjYWE0ZTI5OCIsImVtYWlsIjoicG9zdG1hbkBwb3N0bWFuLmNvbSJ9.YxXwsUnx_49vVG3wkf7TsfRJPD_R4-gd5DMPOzmiUIsUDap5KK8E0f2BQX67W0EUlHudTbiVUpWk6FYdqVMvP16IyhVMMPmAFuCNp2CmmGIXEQe5GCELzcQsa2nXl3dPhPqvnYLq2gmGO8YDZIHMdRrzvEdr213DXLSl42VzEeeSL6UPyilAP0d4t69lAZKJm22kF0W-9ELSX14vJgiLYYfzn32Xce7L3lfJi20_gGWRgJA8BTJteY8tfALbLw4jQlR_H2OkUb830sBZ6ma2YTkazBwjQx_AijbgWOQvgaOtP4Yg-LN3NNZNiugVBa9p8YGnZRUpxZN8dVqImSOD2g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"DEPOSIT\",\r\n    \"transactionValue\": 200\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/accounts/:ID/transactions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								":ID",
+								"transactions"
+							],
+							"variable": [
+								{
+									"key": "ID",
+									"value": "61a5f3f2-9b7d-4bea-bf14-94644868e4c41"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FIND_TRANSACTION_200",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "curl --location 'http://localhost:8080/api/v1/accounts/a4d8a2dc-746c-4f5a-9466-c83c7cd7b439/transactions'",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/accounts/:ID/transactions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								":ID",
+								"transactions"
+							],
+							"variable": [
+								{
+									"key": "ID",
+									"value": "a4d8a2dc-746c-4f5a-9466-c83c7cd7b439"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE_PAYMENT_TRANSACTION_201",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"PAYMENT\",\r\n    \"transactionValue\": 100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/accounts/:ID/transactions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								":ID",
+								"transactions"
+							],
+							"variable": [
+								{
+									"key": "ID",
+									"value": "a4d8a2dc-746c-4f5a-9466-c83c7cd7b439"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
