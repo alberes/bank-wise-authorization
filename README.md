@@ -37,12 +37,12 @@ Exemplo 2:
 |--|--|--|--|
 |1|Depósito|100.00|100.00|
 |2|Pagamento|200.00|-100.00|
-|1|Depósito|10.00|-90.00|
+|3Depósito|10.00|-90.00|
 |4|Juros|1.02|-91.02|
-|1|Depósito|50.00|-41.02|
-|4|Juros|0.93|-41.95|
-|1|Depósito|60.00|17.62|
-|1|Depósito|0.43|17.62|
+|5|Depósito|50.00|-41.02|
+|6|Juros|0.93|-41.95|
+|7|Depósito|60.00|17.62|
+|8|Depósito|0.43|17.62|
 
 
 ### Tecnologias Utilizadas
