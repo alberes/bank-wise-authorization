@@ -28,7 +28,7 @@ O sistema usa o padrão arquitetural **CQRS** (Command Query Responsibility Segr
 |--|--|--|--|
 |1|Depósito|200.00|200.00|
 |2|Pagamento|300.00|-100|
-|3|Deposito|200.00|98.98|
+|3|Deposito|200.00|100.00|
 |4|Juros|1.02|98.98|
 
 ### Tecnologias Utilizadas
