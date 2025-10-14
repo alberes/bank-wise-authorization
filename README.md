@@ -195,3 +195,13 @@ Consultar as transações
 curl --location 'http://localhost:8080/api/v1/accounts/[ACCOUNT_ID]/transactions' \
 --header 'Authorization: Bearer [TOKEN_OBTIDO_NA_AUTENTICAÇÃO]'
 ```
+
+* Observabilidade e métricas
+  - [Monitoramento](http://localhost:9091/actuator)
+  - [Log](http://localhost:9091/actuator/logfile)
+  - [Metricas](http://localhost:9091/actuator/metrics)
+  - [DataSource](http://localhost:9091/actuator/metrics/hikaricp.connections.active)
+  - [Memória](http://localhost:9091/actuator/metrics/jvm.buffer.memory.used)
+  - [CPU](http://localhost:9091/actuator/metrics/process.cpu.usage)
+  - [Autorzação](http://localhost:9091/actuator/metrics/spring.security.authorizations.active)
+  - [Sessões](tomcat.sessions.active.current)

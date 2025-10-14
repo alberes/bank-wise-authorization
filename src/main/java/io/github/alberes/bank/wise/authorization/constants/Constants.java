@@ -17,18 +17,14 @@ public interface Constants {
 
     public static String _OR_ = " or ";
     public static final String HAS_ROLE_ADMIN = "hasRole('ADMIN')";
-    public static final String HAS_ROLE_ADMIN_USER = "hasRole('ADMIN') || hasRole('USER')";
-    public static final String HAS_USER_AUTHORITY_WRITE = "hasAuthority('user.write')";
-    public static final String HAS_USER_AUTHORITY_READ = "hasAuthority('user.read')";
-    public static final String HAS_USER_AUTHORITY_UPDATE = "hasAuthority('user.update')";
-    public static final String HAS_USER_AUTHORITY_DELETE = "hasAuthority('user.delete')";
-    public static final String HAS_CLIENT_AUTHORITY_WRITE = "hasAuthority('client.write')";
-    public static final String HAS_CLIENT_AUTHORITY_READ = "hasAuthority('client.read')";
-    public static final String HAS_CLIENT_AUTHORITY_UPDATE = "hasAuthority('client.update')";
-    public static final String HAS_CLIENT_AUTHORITY_DELETE = "hasAuthority('client.delete')";
+    public static final String HAS_CLIENT_AUTHORITY_WRITE = "hasAuthority('WRITE')";
+    public static final String HAS_CLIENT_AUTHORITY_READ = "hasAuthority('READ')";
+    public static final String HAS_CLIENT_AUTHORITY_UPDATE = "hasAuthority('UPDATE')";
+    public static final String HAS_CLIENT_AUTHORITY_DELETE = "hasAuthority('DELETE')";
     public static final String UNAUTHORIZED_MESSAGE = "The user can only access resources that belong to him.";
     public static final String SLASH = "/";
     public static final String SPACE = " ";
+    public static final String BLANK = "";
     public static final String REGISTRATION_WITH_LOGIN_OR_LEGAL_ENTITY_NUMBER = "Registration with LOGIN or Legal entity number";
     public static final String REGISTRATION_WITH_E_CLIENT_ID = "Registration with client-id ";
     public static final String HAS_ALREADY_BEEN_REGISTERED = " has already been registered!";

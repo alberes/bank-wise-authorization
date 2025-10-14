@@ -90,16 +90,22 @@
 					],
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "admin-client-id",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "admin-client-secret",
+									"type": "string"
+								}
+							]
 						},
 						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Basic YWRtaW4tY2xpZW50LWlkOmFkbWluLWNsaWVudC1zZWNyZXQ=",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "urlencoded",
 							"urlencoded": [
@@ -195,6 +201,71 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "AUTHORIZATION_CODE_REFRESH_TOKEN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const body = JSON.parse(responseBody);\r",
+									"\r",
+									"pm.globals.set(\"access_token\", body.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "postman-secret",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "postman-client",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "refresh_token",
+									"type": "text"
+								},
+								{
+									"key": "refresh_token",
+									"value": "MGhsRSfzUPueLPbVxvFV5SZQb8Q8x1Ju_L1ioPD2GryV9It4Gyu8R4IFWUGa_NoU699Ojo-mca_7hpNC2EuKAC-l6asNnVRLHM6Lzg9cBS_ucYRsP7o0DqyUXFji8iyQ",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/oauth2/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"oauth2",
+								"token"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -249,7 +320,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJraWQiOiIwYWE1ZDM4NS1hZGQ3LTQzMjYtOTg5ZC0wMDU0OWI2ZjY5ODAiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbi1jbGllbnQtaWQiLCJhdWQiOiJhZG1pbi1jbGllbnQtaWQiLCJuYmYiOjE3NjAxMTYxODQsInNjb3BlIjpbIkFETUlOIl0sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImlkIjoiMzhiYzdlYzctMDY5My00MjFmLThjMzMtOWYwOThhMzA1YmY2IiwiZXhwIjoxNzYwMTE3OTg0LCJpYXQiOjE3NjAxMTYxODQsImp0aSI6ImFjNDg3Y2QwLTM3ZmUtNDVlOC05ZTY0LWQyNGFkYWQ5MDg4YyJ9.eLxSrv-bU0OjBB-If5-t8ofXWXVXscb5VEn787Svz6QmBnaZzs9d-ejAlwfOwYa-KYGE47VaOPP73OwS3skqwnMXAgt-RYOOPFK8CLkkrBQTj124R7RWM6i-MMWEpI1ZBjh195RI9ZAUugbkpT4bJ90cG3jitKMp9pnD8pUnTYNFZD805lg-5yOsYIzFKmWi8KbI-yOPmFaTJXkhHF34nRWdX4beJkxM6v3gB-mo7OEm4YvhNqQHbKfBEjAsP7ebtiuiL-itTANyLc-HgEGerUzOF5st0K7A_dy3IcNCeiK5c4XFq6UM066NCDuiCnpIIZ4atkr1HCl3lVjRBtepfA",
+									"value": "{{access_token}}",
 									"type": "string"
 								}
 							]
@@ -334,7 +405,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJraWQiOiJjNThiNDI0NC0yZDI4LTRkNWUtODE1Ny04ZmEzNzUxNDc4OGUiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbi1jbGllbnQtaWQiLCJhdWQiOiJhZG1pbi1jbGllbnQtaWQiLCJuYmYiOjE3NjAxMTY1OTMsInNjb3BlIjpbIkFETUlOIl0sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImlkIjoiMzhiYzdlYzctMDY5My00MjFmLThjMzMtOWYwOThhMzA1YmY2IiwiZXhwIjoxNzYwMTE4MzkzLCJpYXQiOjE3NjAxMTY1OTMsImp0aSI6ImQ0YTQ0ODBiLWFkOWMtNDUzOS05OTc1LTdiMDllODRmZDI3MSJ9.oexTLpKR7xgqfr9eCLfcaXO8VB587k-DpPXDIMjnPrmhzNSv_B30w-dFM-JWdBvmZGinKg7ZS8-cQXUn9lfd4RZAgU5ixAgXuQwAejbCXrFeHzw2I0YhcxeznGKKgHi0BaHBKhrkXSs0WNa0uhNCejZxm0lN0fcpZv8P_DqXqpHv3cyC3STTd3UoX7W-cI-El2wtWJAXno13VzfR3aHAnHNgkKZCCfQs8W_xZskKtzNRqZjF6cH4IGjXQ6-OqIId2f2fE0te9XzkAid9EQ4xJ5BUi8YyCkVmgQ23JklgfWFVbYDC3ZN-01fDW5TxIxYxShwlskgSOJSA-jusA7t5HA",
+									"value": "{{access_token}}",
 									"type": "string"
 								}
 							]
@@ -426,7 +497,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Posterman User\",\r\n    \"legalEntityNumber\": \"59964669020\",\r\n    \"login\": \"postman@postman.com\",\r\n    \"password\": \"postman123\",\r\n    \"scopes\": [\r\n    \"write\",\r\n    \"read\",\r\n    \"update\",\r\n    \"delete\"\r\n  ]\r\n}",
+							"raw": "{\r\n    \"name\": \"Posterman User\",\r\n    \"legalEntityNumber\": \"23226239031\",\r\n    \"login\": \"postman@postman.com\",\r\n    \"password\": \"postman123\",\r\n    \"scopes\": [\r\n    \"write\",\r\n    \"read\",\r\n    \"update\",\r\n    \"delete\"\r\n  ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -860,7 +931,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJraWQiOiI4YTEzYWFlMy1mMGFlLTQ2NWYtYWFiYy0zOWRmOTc5Y2VjYjgiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbi1jbGllbnQtaWQiLCJhdWQiOiJhZG1pbi1jbGllbnQtaWQiLCJuYmYiOjE3NjAxMjIwMDQsInNjb3BlIjpbIkFETUlOIl0sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImlkIjoiMWQ3MWE3NjItYzE0Mi00Y2MxLThhZjgtZDc0YTk1MDUzNjE3IiwiZXhwIjoxNzYwMTIzODA0LCJpYXQiOjE3NjAxMjIwMDQsImp0aSI6IjM2N2RmYTI1LTUwMTAtNDU1NS04NzE2LTNkMmQxNzQxOWQxMyJ9.qBDRSl2DLO5Il3XNTuI53Yzh2wSstm1RhL6CMyhW4Z7CJ3vGeXTuYhfoIxMlauKYM3Ows3FaI8xGMAF8-niPURCRWsz7O1b1FajvWMcxkbD1t4mbJX138CoM5Q_SKSyTWDiQ3CSBrVBJsQNevL0ZHkCqTeBea2VIWcACwMInIeus9dbnf10uBQQkLzQM8d65gyIINbL8LsIR4uE3iRotAdrGh4je7v3XRIHepTmstaHE-aQMcbEMxonQG_hy6pb0PZuthUkHQ-6wCv2OQRgCsHez9EbFDCiP88MaS8Z44bnjLdMDvlqjiabNKu-5sZZyT1UZPmUuBGe0xrClApCW2Q",
+									"value": "{{access_token}}",
 									"type": "string"
 								}
 							]
@@ -991,7 +1062,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJraWQiOiI4YTEzYWFlMy1mMGFlLTQ2NWYtYWFiYy0zOWRmOTc5Y2VjYjgiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbi1jbGllbnQtaWQiLCJhdWQiOiJhZG1pbi1jbGllbnQtaWQiLCJuYmYiOjE3NjAxMjIwMDQsInNjb3BlIjpbIkFETUlOIl0sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImlkIjoiMWQ3MWE3NjItYzE0Mi00Y2MxLThhZjgtZDc0YTk1MDUzNjE3IiwiZXhwIjoxNzYwMTIzODA0LCJpYXQiOjE3NjAxMjIwMDQsImp0aSI6IjM2N2RmYTI1LTUwMTAtNDU1NS04NzE2LTNkMmQxNzQxOWQxMyJ9.qBDRSl2DLO5Il3XNTuI53Yzh2wSstm1RhL6CMyhW4Z7CJ3vGeXTuYhfoIxMlauKYM3Ows3FaI8xGMAF8-niPURCRWsz7O1b1FajvWMcxkbD1t4mbJX138CoM5Q_SKSyTWDiQ3CSBrVBJsQNevL0ZHkCqTeBea2VIWcACwMInIeus9dbnf10uBQQkLzQM8d65gyIINbL8LsIR4uE3iRotAdrGh4je7v3XRIHepTmstaHE-aQMcbEMxonQG_hy6pb0PZuthUkHQ-6wCv2OQRgCsHez9EbFDCiP88MaS8Z44bnjLdMDvlqjiabNKu-5sZZyT1UZPmUuBGe0xrClApCW2Q",
+									"value": "{{access_token}}",
 									"type": "string"
 								}
 							]
@@ -1068,7 +1139,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJraWQiOiJiMjg3Mjg1ZC1lMzM1LTRjODUtOGZjMC05MWIxM2ZlNzgzNDEiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJwb3N0bWFuQHBvc3RtYW4uY29tIiwiYXVkIjoicG9zdG1hbi1jbGllbnQiLCJuYmYiOjE3NjAyOTk5NzksInNjb3BlIjpbIlJFQUQiLCJERUxFVEUiLCJVUERBVEUiLCJXUklURSJdLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJuYW1lIjoiUG9zdGVybWFuIFVzZXIiLCJyZWdpc3RyYXRpb25EYXRlIjoiMTItMTAtMjAyNSAxNzowMDo0MCIsImlkIjoiNjFhNWYzZjItOWI3ZC00YmVhLWJmMTQtOTQ2NDQ4NjhlNGM0IiwiZXhwIjoxNzYwMzE3OTc5LCJpYXQiOjE3NjAyOTk5NzksImp0aSI6IjRjZTgwYzNjLTg2OTItNGVmYS1iM2Y1LTdjZmVjYWE0ZTI5OCIsImVtYWlsIjoicG9zdG1hbkBwb3N0bWFuLmNvbSJ9.YxXwsUnx_49vVG3wkf7TsfRJPD_R4-gd5DMPOzmiUIsUDap5KK8E0f2BQX67W0EUlHudTbiVUpWk6FYdqVMvP16IyhVMMPmAFuCNp2CmmGIXEQe5GCELzcQsa2nXl3dPhPqvnYLq2gmGO8YDZIHMdRrzvEdr213DXLSl42VzEeeSL6UPyilAP0d4t69lAZKJm22kF0W-9ELSX14vJgiLYYfzn32Xce7L3lfJi20_gGWRgJA8BTJteY8tfALbLw4jQlR_H2OkUb830sBZ6ma2YTkazBwjQx_AijbgWOQvgaOtP4Yg-LN3NNZNiugVBa9p8YGnZRUpxZN8dVqImSOD2g",
+									"value": "{{access_token}}",
 									"type": "string"
 								}
 							]
@@ -1077,7 +1148,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"type\": \"DEPOSIT\",\r\n    \"transactionValue\": 200\r\n}",
+							"raw": "{\r\n    \"type\": \"DEPOSIT\",\r\n    \"transactionValue\": 200.00\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1101,7 +1172,7 @@
 							"variable": [
 								{
 									"key": "ID",
-									"value": "61a5f3f2-9b7d-4bea-bf14-94644868e4c41"
+									"value": "9e5c195b-0622-46d8-8e69-0f2857df423d"
 								}
 							]
 						}
@@ -1109,14 +1180,14 @@
 					"response": []
 				},
 				{
-					"name": "FIND_TRANSACTION_200",
+					"name": "FIND_BY_ACCOUNT_TRANSACTION_200",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "curl --location 'http://localhost:8080/api/v1/accounts/a4d8a2dc-746c-4f5a-9466-c83c7cd7b439/transactions'",
+									"value": "{{access_token}}",
 									"type": "string"
 								}
 							]
@@ -1140,7 +1211,7 @@
 							"variable": [
 								{
 									"key": "ID",
-									"value": "a4d8a2dc-746c-4f5a-9466-c83c7cd7b439"
+									"value": "9e5c195b-0622-46d8-8e69-0f2857df423d"
 								}
 							]
 						}
@@ -1164,7 +1235,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"type\": \"PAYMENT\",\r\n    \"transactionValue\": 100\r\n}",
+							"raw": "{\r\n    \"type\": \"PAYMENT\",\r\n    \"transactionValue\": 300\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1188,7 +1259,99 @@
 							"variable": [
 								{
 									"key": "ID",
-									"value": "a4d8a2dc-746c-4f5a-9466-c83c7cd7b439"
+									"value": "555a8121-3947-4704-a685-b8c07494ccb8"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE_WITHDRAW_TRANSACTION_201",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"PAYMENT\",\r\n    \"transactionValue\": 100.00\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/accounts/:ID/transactions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								":ID",
+								"transactions"
+							],
+							"variable": [
+								{
+									"key": "ID",
+									"value": "1bff73b3-5b27-42b8-b3cd-726784634d55"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FIND_TRANSACTION_200",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/accounts/:ID/transactions/:transactionID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								":ID",
+								"transactions",
+								":transactionID"
+							],
+							"variable": [
+								{
+									"key": "ID",
+									"value": "9e5c195b-0622-46d8-8e69-0f2857df423d"
+								},
+								{
+									"key": "transactionID",
+									"value": "8ab25bde-1d85-4ef7-bcea-7ce9583ac525"
 								}
 							]
 						}

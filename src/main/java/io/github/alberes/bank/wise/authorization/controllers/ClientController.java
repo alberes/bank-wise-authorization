@@ -30,7 +30,7 @@ public class ClientController implements GenericController{
     private final ClientMapper mapper;
 
     @PostMapping
-    @PreAuthorize(Constants.HAS_ROLE_ADMIN + Constants._OR_ + Constants.HAS_CLIENT_AUTHORITY_WRITE)
+    @PreAuthorize(Constants.HAS_ROLE_ADMIN)
     @Operation(summary = "Save client.", description = "Save client in database. Only client with profile ADMIN can create client.",
             operationId = "saveClient")
     @ApiResponses({
@@ -52,7 +52,7 @@ public class ClientController implements GenericController{
     }
 
     @GetMapping("/{clientId}")
-    @PreAuthorize(Constants.HAS_ROLE_ADMIN_USER + Constants._OR_ + Constants.HAS_CLIENT_AUTHORITY_READ)
+    @PreAuthorize(Constants.HAS_ROLE_ADMIN)
     @Operation(summary = "Find client.", description = "Find client in database. Client with profile ADMIN can access any clients and other profiles can only access resources that belong to him.",
             operationId = "findClient")
     @ApiResponses({
@@ -70,7 +70,7 @@ public class ClientController implements GenericController{
     }
 
     @PutMapping("/{clientId}")
-    @PreAuthorize(Constants.HAS_ROLE_ADMIN_USER + Constants._OR_ + Constants.HAS_CLIENT_AUTHORITY_UPDATE)
+    @PreAuthorize(Constants.HAS_ROLE_ADMIN)
     @Operation(summary = "Update client.", description = "Update with success. Client with profile ADMIN can access any clients and other profiles can only access resources that belong to him.",
             operationId = "updateClient")
     @ApiResponses({
@@ -89,7 +89,7 @@ public class ClientController implements GenericController{
     }
 
     @DeleteMapping("/{clientId}")
-    @PreAuthorize(Constants.HAS_ROLE_ADMIN_USER + Constants._OR_ + Constants.HAS_CLIENT_AUTHORITY_DELETE)
+    @PreAuthorize(Constants.HAS_ROLE_ADMIN)
     @Operation(summary = "Delete client.", description = "Delete with success. User with profile ADMIN can access any clients and other profiles can only access resources that belong to him.",
             operationId = "deleteClient")
     @ApiResponses({

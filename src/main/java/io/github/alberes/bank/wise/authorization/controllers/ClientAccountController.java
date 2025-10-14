@@ -34,7 +34,7 @@ public class ClientAccountController implements GenericController{
     private final ClientAccountMapper mapper;
 
     @PostMapping
-    @PreAuthorize(Constants.HAS_ROLE_ADMIN + Constants._OR_ + Constants.HAS_USER_AUTHORITY_WRITE)
+    @PreAuthorize(Constants.HAS_ROLE_ADMIN)
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Saved with success."),
             @ApiResponse(responseCode = "400", description = "Validation error.",
@@ -59,7 +59,7 @@ public class ClientAccountController implements GenericController{
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize(Constants.HAS_ROLE_ADMIN_USER +  Constants._OR_ + Constants.HAS_USER_AUTHORITY_READ)
+    @PreAuthorize(Constants.HAS_ROLE_ADMIN)
     @Operation(summary = "Find client account.", description = "Find client account in database. Client account with profile ADMIN can access any users and other profiles can only access resources that belong to him.",
             operationId = "findClientAccount")
     @ApiResponses({
@@ -78,7 +78,7 @@ public class ClientAccountController implements GenericController{
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize(Constants.HAS_ROLE_ADMIN_USER + Constants._OR_ + Constants.HAS_USER_AUTHORITY_UPDATE)
+    @PreAuthorize(Constants.HAS_ROLE_ADMIN)
     @Operation(summary = "Update client account.", description = "Update with success. Client account with profile ADMIN can access any users and other profiles can only access resources that belong to him.",
             operationId = "updateClientAccount")
     @ApiResponses({
@@ -98,7 +98,7 @@ public class ClientAccountController implements GenericController{
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize(Constants.HAS_ROLE_ADMIN_USER + Constants._OR_ + Constants.HAS_USER_AUTHORITY_DELETE)
+    @PreAuthorize(Constants.HAS_ROLE_ADMIN)
     @Operation(summary = "Delete client account.", description = "Delete with success. Client account with profile ADMIN can access any users and other profiles can only access resources that belong to him.",
             operationId = "deleteClientAccount")
     @ApiResponses({

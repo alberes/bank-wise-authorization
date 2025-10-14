@@ -6,9 +6,9 @@ import io.github.alberes.bank.wise.authorization.constants.Constants;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record TransactionDto(String type,
+public record TransactionDto(String transactionType,
                              @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#,##0.00")
-                             BigDecimal valor,
+                             BigDecimal transactionValue,
                              @JsonFormat(pattern= Constants.DATE_TIME_FORMATTER_PATTERN)
-                             LocalDateTime data) {
+                             LocalDateTime createdDate) {
 }
