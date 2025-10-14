@@ -43,7 +43,7 @@ logging:
   file:
     name: bank-wise-authorization.log
   level:
-    root: debug
+    root: warn
     #org.springframework.web: debug
     #org.springframework.security: debug
     #org.springframework.security.oauth2: debug
