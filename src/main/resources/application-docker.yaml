@@ -2,22 +2,24 @@ spring:
   datasource:
     url: jdbc:h2:file:./data/bank-wise
     driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    username: ${USERNAME:sa}
+    password: ${PASSWORD:}
   h2:
     console:
       enabled: true
       path: /h2-console
+      settings:
+        web-allow-others: true
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: ${JPA_HIBERNATE_DDL_AUTO:update}
+    show-sql: ${JPA_HIBERNATE_SHOW_SQL:true}
     properties:
       hibernate:
-        format_sql: true
+        format_sql: ${JPA_PROPERTIES_HIBERNATE:true}
   data:
     mongodb:
-      uri: mongodb://bank-wise-admin:bank-wise-pass@localhost:27017/bank-wise?authSource=admin
+      uri: ${MONGODB_URI:mongodb://bank-wise-admin:bank-wise-pass@mongodb:27017/bank-wise?authSource=admin}
   #data:
   #  mongodb:
   #    host: localhost
@@ -29,16 +31,16 @@ spring:
 
 management:
   server:
-    port: 8081
+    port: ${MANAGEMENT_SERVER_PORT:8081}
   endpoints:
     web:
       exposure:
         include: '*'
 logging:
   file:
-    name: bank-wise-authorization.log
+    name: ${LOGGIN_FILE_NAME:bank-wise-authorization.log}
   level:
-    root: warn
+    root: ${LOGGIN_LEVEL:warn}
     #org.springframework.web: debug
     #org.springframework.security: debug
     #org.springframework.security.oauth2: debug
@@ -46,10 +48,10 @@ logging:
 #Trace, debug, info, warn, error
 
 app:
-  interestRate: 1.02
+  interestRate: ${INTEREST_RATE:1.02}
   server:
     #Ambiente docker precisa configurar o nome do servico
     issuer:
   token:
-    accessTokenExpiration: 300
-    refreshTokenExpiration: 600
+    accessTokenExpiration: ${ACCESS_TOKEN_EXPIRATION:300}
+    refreshTokenExpiration: ${REFRESH_TOKEN_EXPIRATION:600}

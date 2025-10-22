@@ -1,0 +1,30 @@
+FROM maven:3.8.5-openjdk-17 as build
+
+WORKDIR /build
+
+COPY . .
+
+RUN mvn clean package -DskipTests
+
+FROM openjdk:17
+
+WORKDIR /app
+
+COPY --from=build ./build/target/*.jar ./bank-wise-authorization.jar
+
+expose 8080
+
+ENV USERNAME=sa
+ENV PASSWORD=''
+ENV JPA_HIBERNATE_DDL_AUTO=update
+ENV JPA_HIBERNATE_SHOW_SQL=true
+ENV JPA_PROPERTIES_HIBERNATE=true
+ENV MONGODB_URI=''
+ENV MANAGEMENT_SERVER_PORT=8081
+ENV LOGGIN_FILE_NAME=''
+ENV LOGGIN_LEVEL=warn
+ENV INTEREST_RATE=1.02
+ENV ACCESS_TOKEN_EXPIRATION=300
+ENV REFRESH_TOKEN_EXPIRATION=600
+
+ENTRYPOINT java -jar bank-wise-authorization.jar
