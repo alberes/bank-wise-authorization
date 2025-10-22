@@ -2,7 +2,7 @@ spring:
   application:
     name: bank-wise-authorization
   profiles:
-    active: docker
+    active: dev
   jackson:
     default-property-inclusion: non_null
   output:
