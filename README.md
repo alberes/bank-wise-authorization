@@ -218,9 +218,14 @@ docker network create bank-wise-authorization-network
 ```
 Subir o MongoDB com a rede criada
 ```
-docker run -d --name mongodb -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=bank-wise-admin -e MONGO_INITDB_ROOT_PASSWORD=bank-wise-pass --network bank-wise-authorization-network -d mongo:latest
+docker run -d --name mongodb -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=bank-wise-admin -e MONGO_INITDB_ROOT_PASSWORD=bank-wise-pass --network bank-wise-authorization-network -d mongo:8.0.15
 ```
 - Subindo um container Docker da aplicação bank-wise-authorization com variáveis
 ```
 docker run --name bank-wise-authorization -p 8080:8080 -e USERNAME=sa -e PASSWORD= -e JPA_HIBERNATE_DDL_AUTO=update -e JPA_HIBERNATE_SHOW_SQL=true -e JPA_PROPERTIES_HIBERNATE=true -e MONGODB_URI=mongodb://bank-wise-admin:bank-wise-pass@mongodb:27017/bank-wise?authSource=admin -e MANAGEMENT_SERVER_PORT=8081 -e LOGGIN_FILE_NAME=bank-wise-authorization.log -e INTEREST_RATE=1.02 -e ACCESS_TOKEN_EXPIRATION=300 -e REFRESH_TOKEN_EXPIRATION=600 --network bank-wise-authorization-network -d alberes/bank-wise-authorization:1.0.0
+```
+
+2. Já existe as imagens no repostório docker então basta executar o comando abaixo para subir a aplicação.
+```
+docker-compose up -d
 ```
