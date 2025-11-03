@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bank-wise-authorization-service
+  #namespace: bank-wise-authorization-ns
+  labels:
+    app: bank-wise-authorization-app
+spec:
+  type: NodePort
+  selector:
+    app: bank-wise-authorization-pods
+  ports:
+    - name: bank-wise-authorization
+      nodePort: 31000
+      port: 8080
+      targetPort: 8080

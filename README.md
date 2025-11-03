@@ -62,6 +62,8 @@ Exemplo 2:
   * [actuator](https://docs.spring.io/spring-boot/docs/2.0.x/actuator-api/html/)
 * JDK:
   * versão 17
+* SO
+  * Ubuntu 24.04.3 LTS 
 * IDE:
   * [Intellij](https://www.jetbrains.com/idea/)
 * Gerenciado de dependencias:
@@ -69,6 +71,9 @@ Exemplo 2:
 * Container:
   * [Docker](https://www.docker.com/)
   * [Docker Hub](https://hub.docker.com/)
+* Kubernates
+  * [kubectl](https://kubernetes.io/pt-br/docs/tasks/tools/install-kubectl-linux/)
+  * [Minikube](https://minikube.sigs.k8s.io/docs/start/?arch=%2Flinux%2Fx86-64%2Fstable%2Fbinary+download)
 * Ferramentas:
   * [Postman](https://www.postman.com/)
   * [Beekeeper](https://www.beekeeperstudio.io/)
@@ -197,13 +202,13 @@ curl --location 'http://localhost:8080/api/v1/accounts/[ACCOUNT_ID]/transactions
 ```
 
 * Observabilidade e métricas
-  - [Monitoramento](http://localhost:9091/actuator)
-  - [Log](http://localhost:9091/actuator/logfile)
-  - [Metricas](http://localhost:9091/actuator/metrics)
-  - [DataSource](http://localhost:9091/actuator/metrics/hikaricp.connections.active)
-  - [Memória](http://localhost:9091/actuator/metrics/jvm.buffer.memory.used)
-  - [CPU](http://localhost:9091/actuator/metrics/process.cpu.usage)
-  - [Autorzação](http://localhost:9091/actuator/metrics/spring.security.authorizations.active)
+  - [Monitoramento](http://localhost:8081/actuator)
+  - [Log](http://localhost:8081/actuator/logfile)
+  - [Metricas](http://localhost:8081/actuator/metrics)
+  - [DataSource](http://localhost:8081/actuator/metrics/hikaricp.connections.active)
+  - [Memória](http://localhost:8081/actuator/metrics/jvm.buffer.memory.used)
+  - [CPU](http://localhost:8081/actuator/metrics/process.cpu.usage)
+  - [Autorzação](http://localhost:8081/actuator/metrics/spring.security.authorizations.active)
   - [Sessões](tomcat.sessions.active.current)
 
 
@@ -222,10 +227,96 @@ docker run -d --name mongodb -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=bank-w
 ```
 - Subindo um container Docker da aplicação bank-wise-authorization com variáveis
 ```
-docker run --name bank-wise-authorization -p 8080:8080 -e USERNAME=sa -e PASSWORD= -e JPA_HIBERNATE_DDL_AUTO=update -e JPA_HIBERNATE_SHOW_SQL=true -e JPA_PROPERTIES_HIBERNATE=true -e MONGODB_URI=mongodb://bank-wise-admin:bank-wise-pass@mongodb:27017/bank-wise?authSource=admin -e MANAGEMENT_SERVER_PORT=8081 -e LOGGIN_FILE_NAME=bank-wise-authorization.log -e INTEREST_RATE=1.02 -e ACCESS_TOKEN_EXPIRATION=300 -e REFRESH_TOKEN_EXPIRATION=600 --network bank-wise-authorization-network -d alberes/bank-wise-authorization:1.0.0
+docker run --name bank-wise-authorization -p 8080:8080 -e USERNAME=sa -e PASSWORD= -e JPA_HIBERNATE_DDL_AUTO=update -e JPA_HIBERNATE_SHOW_SQL=true -e JPA_PROPERTIES_HIBERNATE=true -e MONGODB_URI=mongodb://bank-wise-admin:bank-wise-pass@mongodb:27017/bank-wise?authSource=admin -e MANAGEMENT_SERVER_PORT=8081 -e LOGGIN_FILE_NAME=bank-wise-authorization.log -e INTEREST_RATE=1.02 -e ACCESS_TOKEN_EXPIRATION=300 -e REFRESH_TOKEN_EXPIRATION=600 -e METRICS_SYSTEM_PROCESSOR=false --network bank-wise-authorization-network -d alberes/bank-wise-authorization:1.0.0
 ```
 
 2. Já existe as imagens no repostório docker então basta executar o comando abaixo para subir a aplicação.
 ```
 docker-compose up -d
 ```
+
+3. Ambiente Linux
+   Caso a aplicação bank-wise-authorization não responda siga os passos abaixo:
+   3.1 Verifique se a aplicação está no ar usando o comando:
+```
+docker ps
+```
+Caso não esteja na lista verifique o logs do container
+```
+docker logs bank-wise-authorization
+```
+Caso contenha o erro abaixo o problema está na monitoração do **actuator** e devera seguir alguns passos no ambiente Linux:
+> java.lang.NullPointerException: Cannot invoke "jdk.internal.platform.CgroupInfo.getMountPoint()" because "anyController" is null
+
+**Passo 1: Verifique a versão do cgroups**  
+Confirme se você está usando o cgroups v2 com o comando:
+```
+stat -fc %T /sys/fs/cgroup/
+```
+Se a saída for  `cgroup2fs`, você está usando o cgroups v2.
+
+**Passo 2: Edite o arquivo de configuração do GRUB**  
+Modifique o arquivo  `/etc/default/grub`  para adicionar os parâmetros do kernel que habilitam o cgroups v1 para a memória e desabilitam o cgroups v2:
+
+1.  Abra o arquivo com um editor de texto com privilégios de superusuário:
+```
+sudo nano /etc/default/grub
+```
+2.  Encontre a linha que começa com  `GRUB_CMDLINE_LINUX_DEFAULT`  e adicione os seguintes parâmetros dentro das aspas:  
+    `cgroup_enable=memory systemd.unified_cgroup_hierarchy=0`  
+    A linha deve ficar assim:  
+    `GRUB_CMDLINE_LINUX_DEFAULT="... cgroup_enable=memory systemd.unified_cgroup_hierarchy=0"`
+
+    > **Importante:**  Não apague outros parâmetros existentes, apenas adicione os novos ao final.
+    **Passo 3: Atualize a configuração do GRUB**  
+    Execute o comando para aplicar as alterações:
+```
+sudo update-grub
+```
+**Passo 4: Reinicie o sistema**  
+Para que as mudanças nos parâmetros do kernel entrem em vigor, você deve reiniciar o computador:
+```
+sudo reboot
+```
+Após o reinício, execute  `cat /proc/cgroups`  novamente. A linha  `memory`  deverá aparecer.
+
+5. Melhorando a aplicação com uso do Kubernates (K8S)
+
+Na pasta K8S temos os arquivos para criação do ambiente
+[bank-wise-authorization-namespace.yaml](k8s/bank-wise-authorization-namespace.yaml)
+[bank-wise-authorization-mongodb-deployment.yaml](k8s/bank-wise-authorization-mongodb-deployment.yaml)
+[bank-wise-authorization-mongodb-service.yaml](k8s/bank-wise-authorization-mongodb-service.yaml)
+[bank-wise-authorization-deployment.yaml](k8s/bank-wise-authorization-deployment.yaml)
+[bank-wise-authorization-service.yaml](k8s/bank-wise-authorization-service.yaml)
+
+5.1 Criar um namespace para aplicação (bank-wise-authorization-ns)
+```
+kubectl apply -f bank-wise-authorization-namespace.yaml
+```
+5.2 Criar um deployment do mongodb
+```
+kubectl apply -f bank-wise-authorization-mongodb-deployment.yaml
+```
+5.3 Criar um service para o deployment mongodb
+```
+kubectl apply -f bank-wise-authorization-mongodb-service.yaml
+```
+5.4 Obter o endereço IP dp service do mongodb
+```
+minikube service mongodb-service --url --namespace=bank-wise-authorization-ns
+```
+5.5 Localizar a variável MONGODB_URI no arquivo k8s/bank-wise-authorization-deployment.yaml e substituir o IP porta na linha value.
+
+5.6 Criar um deployment da aplicação bank-wise
+```
+kubectl apply -f bank-wise-authorization-deployment.yaml
+```
+5.7 Criar um service para o deployment bank-wise
+```
+kubectl apply -f bank-wise-authorization-service.yaml
+```
+5.4 Obter o endereço IP dp service da aplicação bank-wise - Utilizar na collection Postman
+```
+minikube service bank-wise-authorization-service --url --namespace=bank-wise-authorization-ns
+```
+
