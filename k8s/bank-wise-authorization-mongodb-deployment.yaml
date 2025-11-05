@@ -27,8 +27,11 @@ spec:
               cpu: "1"
           ports:
             - containerPort: 27017
-          env:
-            - name: MONGO_INITDB_ROOT_USERNAME
-              value: bank-wise-admin
-            - name: MONGO_INITDB_ROOT_PASSWORD
-              value: bank-wise-pass
+          envFrom:
+            - secretRef:
+                name: mongodb-configmap
+#          env:
+#            - name: MONGO_INITDB_ROOT_USERNAME
+#              value: bank-wise-admin
+#            - name: MONGO_INITDB_ROOT_PASSWORD
+#              value: bank-wise-pass

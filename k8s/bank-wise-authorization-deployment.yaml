@@ -27,28 +27,31 @@ spec:
               cpu: "1"
           ports:
             - containerPort: 8080
-          env:
-            - name: USERNAME
-              value: sa
-            - name: PASSWORD
-              value: ""
-            - name: JPA_HIBERNATE_DDL_AUTO
-              value: update
-            - name: JPA_HIBERNATE_SHOW_SQL
-              value: "true"
-            - name: JPA_PROPERTIES_HIBERNATE
-              value: "true"
-            - name: MONGODB_URI
-              value: mongodb://bank-wise-admin:bank-wise-pass@192.168.49.2:31017/bank-wise?authSource=admin
-            - name: MANAGEMENT_SERVER_PORT
-              value: "8081"
-            - name: LOGGIN_FILE_NAME
-              value: bank-wise-authorization.log
-            - name: INTEREST_RATE
-              value: "1.02"
-            - name: ACCESS_TOKEN_EXPIRATION
-              value: "300"
-            - name: REFRESH_TOKEN_EXPIRATION
-              value: "600"
-            - name: METRICS_SYSTEM_PROCESSOR
-              value: "false"
+          envFrom:
+            - secretRef:
+                name: bank-wise-authorization-configmap
+#          env:
+#            - name: USERNAME
+#              value: sa
+#            - name: PASSWORD
+#              value: ""
+#            - name: JPA_HIBERNATE_DDL_AUTO
+#              value: update
+#            - name: JPA_HIBERNATE_SHOW_SQL
+#              value: "true"
+#            - name: JPA_PROPERTIES_HIBERNATE
+#              value: "true"
+#            - name: MONGODB_URI
+#              value: mongodb://bank-wise-admin:bank-wise-pass@192.168.49.2:31017/bank-wise?authSource=admin
+#            - name: MANAGEMENT_SERVER_PORT
+#              value: "8081"
+#            - name: LOGGIN_FILE_NAME
+#              value: bank-wise-authorization.log
+#            - name: INTEREST_RATE
+#              value: "1.02"
+#            - name: ACCESS_TOKEN_EXPIRATION
+#              value: "300"
+#            - name: REFRESH_TOKEN_EXPIRATION
+#              value: "600"
+#            - name: METRICS_SYSTEM_PROCESSOR
+#              value: "false"

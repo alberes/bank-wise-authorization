@@ -284,8 +284,10 @@ Após o reinício, execute  `cat /proc/cgroups`  novamente. A linha  `memory`  d
 
 Na pasta K8S temos os arquivos para criação do ambiente
 [bank-wise-authorization-namespace.yaml](k8s/bank-wise-authorization-namespace.yaml)
+[bank-wise-authorization-mongodb-configmap-secret.yaml](k8s/bank-wise-authorization-mongodb-configmap-secret.yaml)
 [bank-wise-authorization-mongodb-deployment.yaml](k8s/bank-wise-authorization-mongodb-deployment.yaml)
 [bank-wise-authorization-mongodb-service.yaml](k8s/bank-wise-authorization-mongodb-service.yaml)
+[bank-wise-authorization-configmap-secret.yaml](k8s/bank-wise-authorization-configmap-secret.yaml)
 [bank-wise-authorization-deployment.yaml](k8s/bank-wise-authorization-deployment.yaml)
 [bank-wise-authorization-service.yaml](k8s/bank-wise-authorization-service.yaml)
 
@@ -293,29 +295,41 @@ Na pasta K8S temos os arquivos para criação do ambiente
 ```
 kubectl apply -f bank-wise-authorization-namespace.yaml
 ```
-5.2 Criar um deployment do mongodb
+5.2 Configurar o contexto do namespace
+```
+kubectl config set-context --current --namespace=bank-wise-authorization-ns
+```
+5.3 Criar o ConfigMap do mongodb
+```
+kubectl apply -f bank-wise-authorization-mongodb-configmap-secret.yaml
+```
+5.4 Criar um deployment do mongodb
 ```
 kubectl apply -f bank-wise-authorization-mongodb-deployment.yaml
 ```
-5.3 Criar um service para o deployment mongodb
+5.5 Criar um service para o deployment mongodb
 ```
 kubectl apply -f bank-wise-authorization-mongodb-service.yaml
 ```
-5.4 Obter o endereço IP dp service do mongodb
+5.6 Obter o endereço IP dp service do mongodb
 ```
 minikube service mongodb-service --url --namespace=bank-wise-authorization-ns
 ```
 5.5 Localizar a variável MONGODB_URI no arquivo k8s/bank-wise-authorization-deployment.yaml e substituir o IP porta na linha value.
 
-5.6 Criar um deployment da aplicação bank-wise
+5.6 Criar o ConfigMap do bank-wise-authorization
+```
+kubectl apply -f bank-wise-authorization-configmap-secret.yaml
+```
+5.7 Criar um deployment da aplicação bank-wise
 ```
 kubectl apply -f bank-wise-authorization-deployment.yaml
 ```
-5.7 Criar um service para o deployment bank-wise
+5.8 Criar um service para o deployment bank-wise
 ```
 kubectl apply -f bank-wise-authorization-service.yaml
 ```
-5.4 Obter o endereço IP dp service da aplicação bank-wise - Utilizar na collection Postman
+5.9 Obter o endereço IP dp service da aplicação bank-wise - Utilizar na collection Postman
 ```
 minikube service bank-wise-authorization-service --url --namespace=bank-wise-authorization-ns
 ```
